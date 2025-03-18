@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Bouncing Emoji Windows</title>
+    <script>
+        
+        const emojis = ['😂', '🤣', '😆', '😜', '🤪', '😎'];
+        const numWindows = 5;
+        const windows = [];
+
+        function openEmojiWindows() {
+            for (let i = 0; i < numWindows; i++) {
+                let emoji = emojis[Math.floor(Math.random() * emojis.length)];
+                let x = Math.random() * (screen.width - 150);
+                let y = Math.random() * (screen.height - 150);
+                let win = window.open("", "", `width=150,height=150,left=${x},top=${y},resizable=no`);
+                if (win) {
+                    win.document.write(`<div style='font-size:50px; text-align:center; margin-top:30px;'>${emoji}</div>`);
+                    win.document.title = "Emoji Window";
+                    windows.push({ win, x, y, dx: (Math.random() - 10) * 2, dy: (Math.random() - 10) * 2 });
+                }
+            }
+            setTimeout(animateWindows, 500);
+        }
+
+        function animateWindows() {
+            setInterval(() => {
+                windows.forEach(obj => {
+                    if (!obj.win || obj.win.closed) return;
+                    try {
+                        obj.x += obj.dx;
+                        obj.y += obj.dy;
+                        
+                        if (obj.x <= 0 || obj.x + 150 >= screen.width) obj.dx *= -1;
+                        if (obj.y <= 0 || obj.y + 150 >= screen.height) obj.dy *= -1;
+                        
+                        obj.win.moveTo(obj.x, obj.y);
+                    } catch (e) {
+                        console.error("Window movement blocked.");
+                    }
+                });
+            }, 200);
+        }
+
+        window.onload = openEmojiWindows;
+    </script>
+</head>
+<body>
+</body>
+</html>
